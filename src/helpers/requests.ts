@@ -10,9 +10,9 @@ cvApi.interceptors.request.use((config: AxiosRequestConfig) => {
     return config;
 });
 
-const auth = async (name: string, password: string) => {
+const auth = async (email: string, password: string) => {
     const resp = await cvApi.post('/users/auth', {
-        name,
+        email,
         password,
     });
     const data = resp.data;
