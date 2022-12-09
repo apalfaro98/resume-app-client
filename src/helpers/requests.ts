@@ -19,6 +19,15 @@ const auth = async (email: string, password: string) => {
     return data;
 };
 
+const createAccount = async (email: string, password: string) => {
+    const resp = await cvApi.post('/users/', {
+        email,
+        password,
+    });
+    const data = resp.data;
+    return data;
+};
+
 // const getEstadistica = async () => {
 //     const resp = await museoApi.get('/estadistica');
 //     const data = resp.data;
@@ -69,5 +78,6 @@ const auth = async (email: string, password: string) => {
 // };
 
 export default {
-    auth
+    auth,
+    createAccount
 };

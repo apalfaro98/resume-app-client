@@ -1,17 +1,37 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import requests from '../helpers/requests';
 
 const isLogin = ref(true);
 const email = ref('');
 const password = ref('');
 const error = ref('');
+const success = ref('');
+
+const router = useRouter();
 
 const sendData = () => {
     if (isLogin.value) {
         requests
             .auth(email.value, password.value)
-            .then(console.log)
+            .then((resp) => {
+                localStorage.setItem('token', resp.token);
+                router.push('/home');
+            })
+            .catch((err) => {
+                error.value = err.response.data.errors[0].msg;
+            });
+    } else {
+        requests
+            .createAccount(email.value, password.value)
+            .then((resp) => {
+                if (resp.created) {
+                    error.value = '';
+                    success.value =
+                        'Cuenta creada satisfactoriamente, por favor inicie sesión';
+                }
+            })
             .catch((err) => {
                 error.value = err.response.data.errors[0].msg;
             });
@@ -25,6 +45,7 @@ const sendData = () => {
             <h1 v-if="isLogin" class="text-3xl mb-4">Iniciar Sesión:</h1>
             <h1 v-else class="text-3xl mb-4">Crear cuenta:</h1>
             <p v-if="error" class="text-red-600 mb-2">{{ error }}</p>
+            <p v-else-if="success" class="text-green-600 mb-2">{{ success }}</p>
             <label for="email">Correo Electrónico: </label>
             <input
                 type="text"
