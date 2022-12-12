@@ -1,4 +1,5 @@
 import axios, { type AxiosRequestConfig } from 'axios';
+import type AllResumes from '@/interfaces/allResumes';
 
 const cvApi = axios.create({
     baseURL: 'http://localhost:3000/api',
@@ -28,11 +29,11 @@ const createAccount = async (email: string, password: string) => {
     return data;
 };
 
-// const getEstadistica = async () => {
-//     const resp = await museoApi.get('/estadistica');
-//     const data = resp.data;
-//     return data;
-// };
+const getAll = async () => {
+    const resp = await cvApi.get('/resumes');
+    const data = resp.data as AllResumes[];
+    return data;
+};
 
 // const getArmas = async () => {
 //     const resp = await museoApi.get('/armas');
@@ -79,5 +80,6 @@ const createAccount = async (email: string, password: string) => {
 
 export default {
     auth,
-    createAccount
+    createAccount,
+    getAll
 };
