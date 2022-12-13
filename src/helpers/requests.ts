@@ -29,8 +29,30 @@ const createAccount = async (email: string, password: string) => {
     return data;
 };
 
-const getAll = async () => {
-    const resp = await cvApi.get('/resumes');
+interface Params {
+    abilities?: string[];
+    minAge?: number;
+    maxAge?: number;
+}
+
+const getParams = (abilities?: string[], minAge?: number, maxAge?: number) => {
+    let params: Params = {};
+    if(abilities){
+        params.abilities = abilities;
+    }
+    if(minAge){
+        params.minAge = minAge;
+    }
+    if(maxAge){
+        params.maxAge = maxAge;
+    }
+    return params;
+}
+
+const getAll = async (abilities?: string[], minAge?: number, maxAge?: number) => {
+    const resp = await cvApi.get(`/resumes`, {
+        params: getParams(abilities, minAge, maxAge)
+    });
     const data = resp.data as AllResumes[];
     return data;
 };
