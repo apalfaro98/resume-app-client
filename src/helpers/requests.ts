@@ -1,5 +1,6 @@
-import axios, { type AxiosRequestConfig } from 'axios';
+import axios, { type AxiosRequestConfig, type ParamsSerializerOptions } from 'axios';
 import type AllResumes from '@/interfaces/allResumes';
+import qs from 'qs';
 
 const cvApi = axios.create({
     baseURL: 'http://localhost:3000/api',
@@ -29,30 +30,32 @@ const createAccount = async (email: string, password: string) => {
     return data;
 };
 
-interface Params {
-    abilities?: string[];
-    minAge?: number;
-    maxAge?: number;
-}
 
 const getParams = (abilities?: string[], minAge?: number, maxAge?: number) => {
-    let params: Params = {};
+    let params = '';
+    if(abilities || minAge || maxAge){
+        params += '?'
+    }
     if(abilities){
-        params.abilities = abilities;
+        abilities.forEach(ability => {
+            params+=`abilities=${ability}&`
+        })
     }
     if(minAge){
-        params.minAge = minAge;
+        params+=`minAge=${minAge}&`
     }
     if(maxAge){
-        params.maxAge = maxAge;
+        params+=`maxAge=${maxAge}&`
     }
+
+    params = params.slice(0, -1);
+
     return params;
 }
 
 const getAll = async (abilities?: string[], minAge?: number, maxAge?: number) => {
-    const resp = await cvApi.get(`/resumes`, {
-        params: getParams(abilities, minAge, maxAge)
-    });
+    const queries = getParams(abilities, minAge, maxAge)
+    const resp = await cvApi.get(`/resumes${queries}`);
     const data = resp.data as AllResumes[];
     return data;
 };
