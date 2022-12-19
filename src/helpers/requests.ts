@@ -59,23 +59,18 @@ const getAll = async (abilities?: string[], minAge?: number, maxAge?: number) =>
     return data;
 };
 
+const getOne = async (id: string) => {
+    const resp = await cvApi.get(`/resumes/${id}`);
+    const data = resp.data;
+    return data;
+};
+
 const deleteCV = async (id: string) => {
     const resp = await cvApi.delete(`/resumes/${id}`);
     const data = resp.data;
     return data;
 };
 
-// const getArmas = async () => {
-//     const resp = await museoApi.get('/armas');
-//     const data = resp.data;
-//     return data;
-// };
-
-// const getOneArma = async (id) => {
-//     const resp = await museoApi.get(`/armas/${id}`);
-//     const data = resp.data;
-//     return data;
-// };
 
 // const createArma = async (arma = {}, image) => {
 //     const resp = await museoApi.post(
@@ -106,5 +101,6 @@ export default {
     auth,
     createAccount,
     getAll,
+    getOne,
     deleteCV
 };
