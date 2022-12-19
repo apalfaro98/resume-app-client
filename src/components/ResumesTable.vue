@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import requests from '../helpers/requests';
 import type AllResumes from '@/interfaces/allResumes';
 
@@ -8,6 +9,9 @@ const ability = ref('');
 const abilities = ref<string[]>([]);
 const minAge = ref(0);
 const maxAge = ref(0);
+const error = ref('');
+
+const router = useRouter();
 
 const requestData = () => {
     requests
@@ -57,9 +61,22 @@ const clear = () => {
     maxAge.value = 0;
     requestData();
 };
+
+const deleteCV = (id: string) => {
+    requests
+        .deleteCV(id)
+        .then((resp) => {
+            console.log(resp);
+        })
+        .catch((err) => {
+            error.value = err.response.data.errors[0].msg;
+        });
+    requestData();
+};
 </script>
 <template>
     <div>
+        <span class="ml-6 text-red-600 font-bold">{{ error }}</span>
         <h3 class="ml-6 mt-4 text-lg">Filtrar por:</h3>
         <div class="flex items-start">
             <label class="ml-6 mt-1" for="">Habilidades:</label>
@@ -145,7 +162,7 @@ const clear = () => {
                     <td class="px-6">
                         <button
                             class="bg-cyan-500 py-2 px-4 rounded-lg font-semibold"
-                            @click=""
+                            @click="router.push(`/home/${resume._id}`)"
                         >
                             Detalles
                         </button>
@@ -157,7 +174,7 @@ const clear = () => {
                         </button>
                         <button
                             class="bg-red-500 py-2 px-4 rounded-lg font-semibold ml-2"
-                            @click=""
+                            @click="deleteCV(resume._id)"
                         >
                             Eliminar
                         </button>

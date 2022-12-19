@@ -1,6 +1,5 @@
 import axios, { type AxiosRequestConfig, type ParamsSerializerOptions } from 'axios';
 import type AllResumes from '@/interfaces/allResumes';
-import qs from 'qs';
 
 const cvApi = axios.create({
     baseURL: 'http://localhost:3000/api',
@@ -60,6 +59,12 @@ const getAll = async (abilities?: string[], minAge?: number, maxAge?: number) =>
     return data;
 };
 
+const deleteCV = async (id: string) => {
+    const resp = await cvApi.delete(`/resumes/${id}`);
+    const data = resp.data;
+    return data;
+};
+
 // const getArmas = async () => {
 //     const resp = await museoApi.get('/armas');
 //     const data = resp.data;
@@ -97,14 +102,9 @@ const getAll = async (abilities?: string[], minAge?: number, maxAge?: number) =>
 //     return data;
 // };
 
-// const deleteArma = async (id) => {
-//     const resp = await museoApi.delete(`/armas/${id}`);
-//     const data = resp.data;
-//     return data;
-// };
-
 export default {
     auth,
     createAccount,
-    getAll
+    getAll,
+    deleteCV
 };
