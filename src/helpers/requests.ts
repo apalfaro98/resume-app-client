@@ -1,5 +1,6 @@
-import axios, { type AxiosRequestConfig, type ParamsSerializerOptions } from 'axios';
+import axios, { type AxiosRequestConfig } from 'axios';
 import type AllResumes from '@/interfaces/allResumes';
+import type OneResume from '@/interfaces/oneResume';
 
 const cvApi = axios.create({
     baseURL: 'http://localhost:3000/api',
@@ -60,7 +61,7 @@ const getAll = async (abilities?: string[], minAge?: number, maxAge?: number) =>
 };
 
 const getOne = async (id: string) => {
-    const resp = await cvApi.get(`/resumes/${id}`);
+    const resp = await cvApi.get<OneResume>(`/resumes/${id}`);
     const data = resp.data;
     return data;
 };
