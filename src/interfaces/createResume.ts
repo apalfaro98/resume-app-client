@@ -4,6 +4,7 @@ interface CreateResume {
     age:       number;
     email: string;
     dateOfBirth: string;
+    imageUrl?: string;
 }
 
 

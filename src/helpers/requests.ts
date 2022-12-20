@@ -74,21 +74,35 @@ const deleteCV = async (id: string) => {
 };
 
 
-const createCV = async (resume: CreateResume, image: File) => {
-    const resp = await cvApi.post(
-        '/resumes',
-        {
-            ...resume,
-            image,
-        },
-        {
-            headers: {
-                'Content-Type': 'multipart/form-data',
+const createCV = async (resume: CreateResume, image?: File) => {
+    if(image){
+        const resp = await cvApi.post(
+            '/resumes',
+            {
+                ...resume,
+                image,
             },
-        }
-    );
-    const data = resp.data;
-    return data;
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+        const data = resp.data;
+        return data;
+    } else{
+        const resp = await cvApi.post(
+            '/resumes',
+            resume,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+        const data = resp.data;
+        return data;
+    }
 };
 
 // const updateArma = async (arma = {}) => {
