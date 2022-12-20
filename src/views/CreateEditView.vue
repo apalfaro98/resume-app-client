@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import type CreateResume from '@/interfaces/createResume';
 import requests from '@/helpers/requests';
 
@@ -18,6 +18,31 @@ const ability = ref('');
 const isUrl = ref(false);
 const image = ref<File | undefined>(undefined);
 const error = ref('');
+
+onMounted(() => {
+    if (route.query.action === 'edit') {
+        getData();
+    }
+});
+
+const getData = () => {
+    const id: string = route.query.id!.toString();
+    requests.getOne(id).then((resp) => {
+        const { name, email, age, dateOfBirth, abilities } = resp;
+        resume.value = {
+            name,
+            email,
+            age,
+            dateOfBirth,
+            abilities,
+        };
+        if (resp.imageUrl && resp.imageUrl.startsWith('http')) {
+            isUrl.value = true;
+            resume.value.imageUrl = resp.imageUrl;
+        }
+        console.log(resp);
+    });
+};
 
 const onFileChange = ($event: Event) => {
     const target = $event.target as HTMLInputElement;
@@ -53,6 +78,30 @@ const saveResume = () => {
 
             requests
                 .createCV(resume.value)
+                .then((resp) => {
+                    console.log(resp);
+                    router.push('/home');
+                })
+                .catch((err) => {
+                    error.value = err.response.data.errors[0].msg;
+                });
+        }
+    } else {
+        const id: string = route.query.id!.toString();
+        if (image.value) {
+            requests
+                .updateCV(id, resume.value, image.value)
+                .then((resp) => {
+                    router.push('/home');
+                })
+                .catch((err) => {
+                    error.value = err.response.data.errors[0].msg;
+                });
+        } else {
+            console.log(resume.value);
+
+            requests
+                .updateCV(id, resume.value)
                 .then((resp) => {
                     console.log(resp);
                     router.push('/home');

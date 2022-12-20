@@ -67,11 +67,15 @@ const deleteCV = (id: string) => {
         .deleteCV(id)
         .then((resp) => {
             console.log(resp);
+            requestData();
         })
         .catch((err) => {
             error.value = err.response.data.errors[0].msg;
         });
-    requestData();
+};
+
+const editCV = (id: string) => {
+    router.push(`/newEdit?action=edit&id=${id}`);
 };
 </script>
 <template>
@@ -168,7 +172,7 @@ const deleteCV = (id: string) => {
                         </button>
                         <button
                             class="bg-orange-500 py-2 px-4 rounded-lg font-semibold ml-2"
-                            @click=""
+                            @click="editCV(resume._id)"
                         >
                             Modificar
                         </button>

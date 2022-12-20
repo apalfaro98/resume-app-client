@@ -93,7 +93,7 @@ const createCV = async (resume: CreateResume, image?: File) => {
     } else{
         const resp = await cvApi.post(
             '/resumes',
-            resume,
+            {...resume},
             {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -105,13 +105,36 @@ const createCV = async (resume: CreateResume, image?: File) => {
     }
 };
 
-// const updateArma = async (arma = {}) => {
-//     const resp = await museoApi.put(`/armas/${arma._id}`, {
-//         ...arma,
-//     });
-//     const data = resp.data;
-//     return data;
-// };
+const updateCV = async (id: string, resume: CreateResume, image?: File) => {
+    if(image){
+        const resp = await cvApi.put(
+            `/resumes/${id}`,
+            {
+                ...resume,
+                image,
+            },
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+        const data = resp.data;
+        return data;
+    } else{
+        const resp = await cvApi.put(
+            `/resumes/${id}`,
+            {...resume},
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+        const data = resp.data;
+        return data;
+    }
+};
 
 export default {
     auth,
@@ -119,5 +142,6 @@ export default {
     getAll,
     getOne,
     createCV,
+    updateCV,
     deleteCV
 };
