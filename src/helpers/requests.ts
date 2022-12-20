@@ -1,6 +1,7 @@
 import axios, { type AxiosRequestConfig } from 'axios';
 import type AllResumes from '@/interfaces/allResumes';
 import type OneResume from '@/interfaces/oneResume';
+import type CreateResume from '@/interfaces/createResume';
 
 const cvApi = axios.create({
     baseURL: 'http://localhost:3000/api',
@@ -73,22 +74,22 @@ const deleteCV = async (id: string) => {
 };
 
 
-// const createArma = async (arma = {}, image) => {
-//     const resp = await museoApi.post(
-//         '/armas',
-//         {
-//             ...arma,
-//             image,
-//         },
-//         {
-//             headers: {
-//                 'Content-Type': 'multipart/form-data',
-//             },
-//         }
-//     );
-//     const data = resp.data;
-//     return data;
-// };
+const createCV = async (resume: CreateResume, image: File) => {
+    const resp = await cvApi.post(
+        '/resumes',
+        {
+            ...resume,
+            image,
+        },
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        }
+    );
+    const data = resp.data;
+    return data;
+};
 
 // const updateArma = async (arma = {}) => {
 //     const resp = await museoApi.put(`/armas/${arma._id}`, {
@@ -103,5 +104,6 @@ export default {
     createAccount,
     getAll,
     getOne,
+    createCV,
     deleteCV
 };
